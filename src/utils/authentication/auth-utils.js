@@ -14,6 +14,33 @@ function encodePwd(pwd) {
     }
 }
 
+const verifyToken = (token)=>{
+  try {
+    const SECRECT_KEY="BABYTHREE"
+    const verifiedToken = jwt.verify(token,SECRECT_KEY)
+    return verifiedToken
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      throw new Error('Token has expired');
+    } else {
+      return {
+        status:false,
+        message:error.message
+      }
+    }
+  }
+}
+
+const decodedToken=async(token)=>{
+  try{
+    const decoded = await jwt.decode(token);
+    return decoded
+  }
+  catch(er){
+    throw new Error(er)
+  }
+}
+
 //So sánh mật khẩu
 function comparePwd(dePwd, enPwd) {
   return bcrypt.compare(dePwd, enPwd);
@@ -24,7 +51,7 @@ function createAccessToken(id){
   dotenv.config()
   try{
 
-    const SECRECT_KEY=process.env.SECRECT_KEY || "BABYTHREE"
+    const SECRECT_KEY="BABYTHREE"
 
     const accessToken = jwt.sign({_id:id},SECRECT_KEY,{expiresIn:"1d"})
 
@@ -49,4 +76,4 @@ function createUniqueString(){
 
 
 
-export {encodePwd,comparePwd,createAccessToken,createUniqueString}
+export {encodePwd,comparePwd,createAccessToken,createUniqueString,decodedToken,verifyToken}

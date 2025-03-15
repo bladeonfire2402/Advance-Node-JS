@@ -1,4 +1,5 @@
 import authServices from "../services/authServices.js";
+import cartServices from "../services/cartServices.js";
 import userServices from "../services/userServices.js";
 import { comparePwd, createAccessToken, createUniqueString, encodePwd } from "../utils/authentication/auth-utils.js";
 
@@ -20,8 +21,12 @@ class authController {
             pwd:hashedPwd
         });
 
+        //Tạo cart cho người dùng
+        const cart = await cartServices.createCart(newUser._id)
+        if(!cart){return res.status({message:"Lỗi không tạo được giỏ hàng"})}
+
         //Gửi email 
-        const emailResult = this.sendNotify(email,req)
+        const emailResult =  this.sendNotify(email,req)
         
         return res.status(200).json({
             message:"Tạo người dùng thành công",
@@ -42,6 +47,9 @@ class authController {
         if(!checkPwd){return res.status(500).json({message:"Password nhập sai rồi"})}
 
         User.pwd=undefined;// Dấu đi trường password
+        
+        const checkVerify = User.verified
+        if(checkVerify==false){return res.status(500).json({message:"Tài khoản chưa xác thực"})}
 
         const accessToken=await createAccessToken(User._id)
 
@@ -50,7 +58,6 @@ class authController {
             accessToken,
             User
         })
-
     }
 
     sendNotify =async(email,res)=>{
@@ -75,16 +82,20 @@ class authController {
         return result
     }
 
-    verifyAccount = async(email,uniqueString,res)=>{
-        const userVerification = userServices.getVerificationByEmail(email)
+    verifyAccount = async(req,res)=>{
+        const {email,uniqueString}=req.body
+        const userVerification = await userServices.getVerificationByEmail(email)
+        //Kiểm tra xem người dùng verified chưa
+        const user = await userServices.getUserByEmail(email)
+        if(user.verified==true){res.status(500).json({message:"Người dùng đã verify rồi"})}
 
         if(userVerification.uniqueString==uniqueString){
             userServices.activeUser(email)
+            return res.status(200).json({message:"Active account thành công"})
         }
-        else{
-            res.status(500).json({
-                message:"Mật khẩu không trùng"
-            })
+        else
+        {
+            return res.status(500).json({message:"Mã xác thực không trùng"})
         }
 
     }
@@ -109,6 +120,8 @@ class authController {
         }
 
         this.sendNotify(email,res)
+
+        return res.status(200).json({message:"Đã gửi lại mã xác thực"})
 
     }
 

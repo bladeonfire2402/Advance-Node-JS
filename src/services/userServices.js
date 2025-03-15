@@ -1,5 +1,6 @@
 import userModel from "../model/userModel.js"
 import userModelVerfication from "../model/userModelVerfication.js";
+import { decodedToken } from "../utils/authentication/auth-utils.js";
 
 
 class userServices {
@@ -23,6 +24,16 @@ class userServices {
         }
     };
 
+    getUserById = async(id)=>{
+        try{
+            const user =await userModel.findById(id)
+            return user
+        }
+        catch(e){
+            throw new Error(e)
+        }
+    }
+
     activeUser = async (email) =>{
         try{
             const user = await userModel.findOneAndUpdate(
@@ -38,6 +49,7 @@ class userServices {
         }
 
     }
+
     createUserVerification = async(email,uniqueString)=>{
         try{
             const userVerification = await userModelVerfication.create({email,uniqueString})
@@ -61,9 +73,32 @@ class userServices {
         }
     };
 
-    
+    updateUser = async(email,newInfo)=>{
+        try{
+            const user = await userModel.findOneAndUpdate(email,{
+                username:newInfo.username,
+                pwd:newInfo.pwd
+            },{new:true,runValidators:true})
 
-    
+            return user
+        }
+        catch(e){
+            console.log(e)
+            return false
+        }
+    }
+
+    //Chuyển từ token về user
+    decodedUser = async(token)=>{
+        try{
+            const user= await decodedToken(token)
+            
+            return user
+        }
+        catch(e){
+            throw new Error(e)
+        }
+    }
     
 }
 

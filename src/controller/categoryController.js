@@ -19,6 +19,16 @@ class categoryController {
             category
         })
     }
+
+    getCategory=async(req,res)=>{
+        const categories = await categoriesServices.getCategoryAll()
+
+        return res.status(200).json({
+            message:"Đã lấy tất cả danh mục",
+            categories
+        })
+
+    }
 }
 
 export default new categoryController

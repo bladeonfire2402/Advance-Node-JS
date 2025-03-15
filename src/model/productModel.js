@@ -2,9 +2,10 @@
 import mongoose from "mongoose";
 
 const productModel = mongoose.Schema({
-    productName:{type:String,required:true},
+    productName:{type:String,required:true,unique:true},
     price:{type:Number,required:true},
     description:{type:String,required:true},
+    imageUrl:{type:String},
     categoryId:{type:mongoose.Schema.Types.ObjectId,ref:"category",required:true}
 },{timestamps:true})
 
