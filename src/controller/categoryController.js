@@ -2,7 +2,7 @@ import categoriesServices from "../services/categoriesServices.js"
 
 class categoryController {
     CreateCategory=async(req,res)=>{
-        const {name,slug }= req.body;
+        const {name,slug,description }= req.body;
         let category = await categoriesServices.getCategoryBySlug(slug)
         
         if(category){return res.status(500).json({
@@ -27,8 +27,9 @@ class categoryController {
             message:"Đã lấy tất cả danh mục",
             categories
         })
-
     }
+
+    
 }
 
 export default new categoryController

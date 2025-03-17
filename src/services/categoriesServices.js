@@ -36,7 +36,9 @@ class categoryServices{
 
     getCategoryAll=async()=>{
         try {
-            const categories = await categoryModel.find()
+            const categories = await categoryModel.find().populate({
+                path:'product'
+            })
 
             return categories
         } catch (error) {
@@ -68,7 +70,7 @@ class categoryServices{
                     product:productId
                 }
             })
-            console.log("Thêm sản phẩm vào category thành công");
+            console.log("Đã xóa sản phẩm khỏi danh mục");
             return categoryProduct
         } 
         catch (error) {

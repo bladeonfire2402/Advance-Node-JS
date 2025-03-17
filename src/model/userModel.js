@@ -5,7 +5,6 @@ const userModel = mongoose.Schema({
     email:{type:String,required:true, unique:true},
     pwd:{type:String,required:true},
     phone:{type:String,required:true},
-   
     //Not send
     role:{type:String,default:"user"},
     verified:{type:Boolean,default:false},

@@ -4,7 +4,7 @@ import productModel from "../model/productModel.js"
 class productServices{
     getProductByName= async(name)=>{
         try {
-            const product = productModel.findOne({productName:name}) 
+            const product =await productModel.findOne({productName:name}) 
             return product
         } catch (error) {
             console.log(error)
@@ -15,7 +15,7 @@ class productServices{
 
     getProductById= async(id)=>{
         try {
-            const product = productModel.findOne({_id:id}) 
+            const product = await productModel.findOne({_id:id}) 
             return product
         } catch (error) {
             console.log(error)
@@ -37,7 +37,7 @@ class productServices{
 
     createProduct= async(productData)=>{
         try {
-            const product= productModel.create(productData)
+            const product=await productModel.create(productData)
             return product
         } catch (error) {
             console.log(error)
@@ -57,12 +57,27 @@ class productServices{
         }
     }
 
+    deleteProduct=async(productId)=>{
+        try{
+            const deletePro = await productModel.deleteOne({_id:productId})
+
+            
+            return true
+        }
+        catch(e){
+            console.log(e)
+        }
+    }
+    
+
     deleteProductById=async(productId)=>{
         try{
             const data=await productModel.findByIdAndDelete(productId);
-            return data
+            
+            const result={data,message:"Đã xóa thành công"}
+            return result
         }catch(e){
-            console.log(e)
+            console.log(`Lỗi  là ${e}`);
             return false
         }
     }

@@ -21,7 +21,7 @@ const verifyToken = (token)=>{
     return verifiedToken
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      throw new Error('Token has expired');
+      return "token has exprired"
     } else {
       return {
         status:false,
@@ -53,7 +53,7 @@ function createAccessToken(id){
 
     const SECRECT_KEY="BABYTHREE"
 
-    const accessToken = jwt.sign({_id:id},SECRECT_KEY,{expiresIn:"1d"})
+    const accessToken = jwt.sign({_id:id},SECRECT_KEY,{expiresIn:"20d"})
 
     return accessToken
   }

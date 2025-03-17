@@ -25,6 +25,22 @@ class cartServices{
         }
     }
 
+    getUserCartWithProduct = async(userId)=>{
+        try{
+            const cart = await Cart.findOne({ user: userId }).populate({
+                path: "cart",
+                populate:{
+                    path:"product"
+                }
+            });
+
+            return cart
+        }
+        catch(e){
+            return e
+        }
+    }
+
     getCartItemByProductId=async(productId)=>{
         try {
             const cartItem = await cartItemModel.findOne({product:productId})

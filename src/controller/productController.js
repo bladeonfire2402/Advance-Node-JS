@@ -33,19 +33,19 @@ class productController{
     }
 
     DeleteProduct=async(req,res)=>{
-        const productExist = await productServices.getProductById(req.body._id)
-        if(productExist){return res.status(500).json({message:"Sản phẩm đã xóa hoặc không tồn tại"})}
-        //Lấy ID của Danh mục cần xóa SP
-        const id= await categoriesServices.getCategoryIdBySlug(slug)
+        const {id,categoryId}= req.body
+        
+        const productExist = await productServices.getProductById(id)
+        if(!productExist){return res.status(500).json({message:"Sản phẩm đã xóa hoặc không tồn tại"})}
+        
         //Xóa sp
-        const deleteProduct = await productServices.deleteProductById(req.body._id)
+        const deleteProduct = await productServices.deleteProduct(id)
         //Cập nhật category
-        const removeProductInCateogry = await categoriesServices.removeProductInCategory(id, req.body.id)
+        const removeProductInCateogry = await categoriesServices.removeProductInCategory(categoryId,id)
 
         return res.status(200).json({
             message:"Đã xóa sản phẩm thành công"
         })
-
     }
 
     //Lấy danh sách sản phẩm SP
@@ -64,12 +64,25 @@ class productController{
 
     //Update sản phẩm nhưng chưa sửa ảnh và trường category
     UpdateProduct = async(req,res) => {
-        const { productName, price, description,categoryId,slug }= req.body
+        const { id,productName, price, description }= req.body
+
+        const updateData = {};
+        if (productName !== undefined) updateData.productName = productName;
+        if (price !== undefined) updateData.price = price;
+        if (description !== undefined) updateData.description = description;
         
-        const product = await productServices.updateProduct(req.body._id,req.body)
+        const product = await productServices.updateProduct(id,updateData)
 
         return res.status(200).json({
             message:"Đã cập nhật sản phẩm thành công",
+            product
+        })
+    }
+
+    GetProductById= async(req,res)=>{
+        const product = await productServices.getProductById(req.body.id)
+
+        return res.status(200).json({
             product
         })
     }

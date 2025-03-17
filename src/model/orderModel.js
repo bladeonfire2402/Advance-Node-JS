@@ -14,6 +14,7 @@ const OrderSchema = new mongoose.Schema(
         required:true
       }   
     ],
+    //Số tiền
     totalAmount: {
       type: Number,
       required: true,

@@ -5,6 +5,6 @@ import checkPermissionAd from '../middleware/checkPermissionAdmin.js'
 const categoryRouter = Router()
 
 categoryRouter.get('/getCategory',categoryController.getCategory)
-categoryRouter.post('/createCategory',checkPermissionAd,categoryController.CreateCategory)
+categoryRouter.post('/createCategory',categoryController.CreateCategory)
 
 export default categoryRouter
