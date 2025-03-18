@@ -27,7 +27,7 @@ class cartServices{
 
     getUserCartWithProduct = async(userId)=>{
         try{
-            const cart = await Cart.findOne({ user: userId }).populate({
+            const cart = await cartModel.findOne({ user: userId }).populate({
                 path: "cart",
                 populate:{
                     path:"product"
@@ -37,6 +37,7 @@ class cartServices{
             return cart
         }
         catch(e){
+            
             return e
         }
     }
@@ -119,6 +120,18 @@ class cartServices{
         }
         catch(e){
             return e
+        }
+    }
+
+    emptyCart = async(userId)=>{
+        try{
+            const cart = await cartModel.findOneAndUpdate({user:userId},{
+                cart:[],
+            },{new:true})
+            return cart
+        }
+        catch(e){
+            throw new Error(e)
         }
     }
 

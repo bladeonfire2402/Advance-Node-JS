@@ -7,13 +7,9 @@ const OrderSchema = new mongoose.Schema(
       ref: 'user',
       required: true,
     },
-    cart: [
-      {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'cart',
-        required:true
-      }   
-    ],
+    orderItems:{
+      type:Array
+    },
     //Số tiền
     totalAmount: {
       type: Number,
@@ -29,9 +25,9 @@ const OrderSchema = new mongoose.Schema(
       enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
       default: 'Pending',
     },
-    shippingAddress: {
-      address: { type: String, required: true },
-      city: { type: String, required: true },
+    address:{
+      type:String,
+      required:true,
     },
     vnp_TxnRef:{type:String} , // Mã giao dịch VNPay
     orderStatus: {

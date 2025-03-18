@@ -6,7 +6,7 @@ const orderRouter = Router()
 orderRouter.get('',()=>{})
 
 orderRouter.post('/test/createOrderItem',orderController.createOrderItem)
-orderRouter.post('/checkOut',orderController.checkOut)
+orderRouter.post('/checkOutCod',orderController.checkOutCod)
 
 
 export default orderRouter
