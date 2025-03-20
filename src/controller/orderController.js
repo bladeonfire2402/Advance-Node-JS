@@ -265,6 +265,11 @@ class orderController {
         })
     }
 
+    refundOrder=async(req,res)=>{
+        
+
+    }
+
     //ADMIN BRUHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
     //Hàm cập nhập trạng thái đơn hàng
     changeOrderStaus = async(req,res)=>{
@@ -284,6 +289,8 @@ class orderController {
 
         return res.status(200).json({message:"Đã update trạng thái đơn hàng",updatedOrder})
     }
+
+    approveRefund=async(req,res)=>{}
 
 }
 export default new orderController
