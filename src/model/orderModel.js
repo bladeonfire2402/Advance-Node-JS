@@ -40,7 +40,6 @@ const OrderSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
- 
 );
 
 export default mongoose.model('Order', OrderSchema);

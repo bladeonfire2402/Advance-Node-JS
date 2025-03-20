@@ -17,7 +17,7 @@ class cartServices{
     getUserCart= async(id)=>{
         try {
             const userCart = await cartModel.findOne({user:id})
-            console.log(id)
+  
             return userCart
             
         } catch (error) {

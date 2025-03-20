@@ -16,27 +16,29 @@ class orderController {
         })
     }
 
+    //Lấy tất cả đơn hàng người dùng
     getUserOrders=async(req,res)=>{
         //Lấy theo id người dùng
         const userOrders = await orderServices.getOrdersByUserId(req.body._id)
-        if(!userOrder|| userOrder.length==0){return res.status(500).json({message:"Không có đơn hàng"})}
+        if(!userOrders|| userOrders.length==0){return res.status(500).json({message:"Không có đơn hàng"})}
 
         return res.status(200).json({
             message:"Lấy dữ liệu đơn hàng thành công",
             userOrders
         })
     }
-    createOrder=async(req,res)=>{
-        
-        
-    }
 
+    //
     updateOrder=async(req,res)=>{
         //truyền vô id đơn hàng
         const order= await orderServices.getOrderById(req.body._id)
         if(!order){return res.status(500).json({message:"Không có order này"})}
 
-        const updatedOrder = await orderServices.updateOrder(req.body._id,"///brurr")
+        const newOrderData = {
+
+        }
+
+        const updatedOrder = await orderServices.updateOrder(req.body._id,newOrderData)
 
         return res.status(200).json({
             message:'Update sản phẩm thành công',

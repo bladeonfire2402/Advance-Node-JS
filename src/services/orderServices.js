@@ -5,7 +5,6 @@ class orderServices{
     getOrderById =async(orderId)=>{
         try{
             const order=await orderModel.findOne({_id:orderId})
-
             return order
         }
         catch(e){
@@ -17,8 +16,7 @@ class orderServices{
     //
     getOrdersByUserId=async(userId)=>{
         try{
-            const orders=await orderModel.find(userId)
-
+            const orders=await orderModel.find(userId).populate({path:'user'})
             return orders
         }
         catch(e){
@@ -29,13 +27,12 @@ class orderServices{
 
     getAllOrders=async()=>{
         try {
-            const orders = await orderModel.find()
+            const orders = await orderModel.find().populate({path:'user'})
 
             return orders
             
         } catch (error) {
             throw new Error(error)
-            
         }
     }
 
