@@ -12,6 +12,17 @@ class categoryServices{
         }
     }
 
+    getCategoryById=async(id)=>{
+        try {
+            const category = await categoryModel.findById(id)
+            
+            return category
+            
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
     getCategoryByName= async(name)=>{
         try{
             const category=await categoryModel.findOne({name:name})
@@ -88,6 +99,15 @@ class categoryServices{
         catch(e){
             console.log(e)
             return e
+        }
+    }
+
+    updateCategory = async(category_id,newCategory)=>{
+        try {
+            const newCategory = await categoryServices.findByIdAndUpdate(category_id,newCategory)
+            
+        } catch (error) {
+            throw new Error("Lỗi update danh mục");
         }
     }
 }

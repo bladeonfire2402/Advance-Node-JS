@@ -5,5 +5,7 @@ const userRouter = Router()
 
 
 userRouter.get('/getUserInfo',userController.getUserInfoByToken)
+userRouter.get('/getUsers', userController.getAllUser)
+
 
 export default userRouter

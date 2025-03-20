@@ -57,9 +57,6 @@ class orderServices{
             throw new Error(error)
         }
     }
-
-    
-    
 }
 
 export default new orderServices

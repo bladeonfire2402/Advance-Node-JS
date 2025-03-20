@@ -29,6 +29,31 @@ class categoryController {
         })
     }
 
+    UpdateCategory = async(req,res)=>{
+        const {name,slug,description,id}=req.body
+
+
+ 
+        let isExist= await categoriesServices.getCategoryByName(name)
+        if(isExist){return res.status(500).json({message:"Dữ liệu lỗi đã có tên danh mục này"})}
+
+        isExist= await categoriesServices.getCategoryBySlug(slug)
+        if(isExist){return res.status(500).json({message:"Dữ liệu lỗi đã có slug danh mục này"})}
+
+        const updateData = {};
+        if (name !== undefined) updateData.name = name;
+        if (slug !== undefined) updateData.slug = slug;
+        if (description !== undefined) updateData.description = description;
+
+        const newCategory = await categoriesServices.updateCategory(id,updateData)
+
+        return res.status(200).json({
+            message:"Update danh mục thành công",
+            newCategory
+        })
+        
+    }
+
     
 }
 

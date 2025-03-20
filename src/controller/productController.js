@@ -2,7 +2,6 @@ import categoriesServices from "../services/categoriesServices.js"
 import imageServices from "../services/imageServices.js"
 import productServices from "../services/productServices.js"
 
-
 class productController{
     CreateProduct = async(req,res)=>{
         const { productName, price, description,categoryId,slug,imageUrl }= req.body 
@@ -87,7 +86,6 @@ class productController{
         })
     }
 
-
     //hàm test ảnh thôi
     uploadImage=async(req,res)=>{
         const id="mmmee";
@@ -101,8 +99,5 @@ class productController{
         return res.status(200).json({upload
         })
     }
-
-   
-
 }
 export default new productController

@@ -28,7 +28,7 @@ class orderController {
         })
     }
 
-    //
+    //Hàm này chưa xong
     updateOrder=async(req,res)=>{
         //truyền vô id đơn hàng
         const order= await orderServices.getOrderById(req.body._id)
@@ -47,6 +47,7 @@ class orderController {
 
     }
 
+    //
     checkOutCod = async(req,res)=>{
         //id người dùng
         const userCart = await cartServices.getUserCartWithProduct(req.body._id)
@@ -263,5 +264,26 @@ class orderController {
             message:"Thanh toán đơn hàng thành công",
         })
     }
+
+    //ADMIN BRUHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+    //Hàm cập nhập trạng thái đơn hàng
+    changeOrderStaus = async(req,res)=>{
+        const {orderId,orderStatus}=req.body
+        const order = await orderServices.getOrderById(orderId)
+        if(!order){return res.status(500).json({message:"Lỗi không tìm thấy đơn hàng"})}
+
+        if(orderStatus=="Cancelled" || orderStatus=="Delivered"){
+            return res.status(500).json({message:`Đơn hàng đã ${orderStatus} không thể thay đổi được`})
+        }
+
+        const newData = {
+            orderStatus:orderStatus
+        }
+
+        const updatedOrder  = await orderServices.updateOrder(orderId,newData)
+
+        return res.status(200).json({message:"Đã update trạng thái đơn hàng",updatedOrder})
+    }
+
 }
 export default new orderController

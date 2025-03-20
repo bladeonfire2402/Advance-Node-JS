@@ -32,7 +32,7 @@ const OrderSchema = new mongoose.Schema(
     vnp_TxnRef:{type:String} , // Mã giao dịch VNPay
     orderStatus: {
       type: String,
-      enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+      enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled',"Return"],
       default: 'Pending',
     },
     createdAt: {

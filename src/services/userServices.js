@@ -4,6 +4,19 @@ import { decodedToken } from "../utils/authentication/auth-utils.js";
 
 
 class userServices {
+    //Lấy tất cả người dùng
+    getUsers = async()=>{
+        try {
+            const users = await userModel.find()
+
+            return users
+            
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+
     createUser = async (userData)=>{
         try{
             const user= await userModel.create(userData);
