@@ -1,6 +1,7 @@
 import orderModel from "../model/orderModel.js"
 
 class orderServices{
+    //Lấy id order
     getOrderById =async(orderId)=>{
         try{
             const order=await orderModel.findOne({_id:orderId})
@@ -13,6 +14,7 @@ class orderServices{
         }
     }
 
+    //
     getOrdersByUserId=async(userId)=>{
         try{
             const orders=await orderModel.find(userId)
@@ -22,6 +24,18 @@ class orderServices{
         catch(e){
             console.log(e)
             throw new Error(e)
+        }
+    }
+
+    getAllOrders=async()=>{
+        try {
+            const orders = await orderModel.find()
+
+            return orders
+            
+        } catch (error) {
+            throw new Error(error)
+            
         }
     }
 

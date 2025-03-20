@@ -5,6 +5,27 @@ import { vnPayParamGenerate,sortParams, signedGenerate, momoParamsGenenrate, Mom
 import { sendPaymentRequestToMoMo } from "../api/momo.js"
 
 class orderController {
+    //Lấy tât cả đơn hàng
+    getOrders=async(req,res)=>{
+        const orders = await orderServices.getAllOrders()
+        if(!orders){return res.status(500).json({message:"Lỗi lấy dữ liệu người dùng"})}
+
+        return res.status(200).json({
+            message:"Lấy dữ liệu đơn hàng thành công",
+            orders
+        })
+    }
+
+    getUserOrders=async(req,res)=>{
+        //Lấy theo id người dùng
+        const userOrders = await orderServices.getOrdersByUserId(req.body._id)
+        if(!userOrder|| userOrder.length==0){return res.status(500).json({message:"Không có đơn hàng"})}
+
+        return res.status(200).json({
+            message:"Lấy dữ liệu đơn hàng thành công",
+            userOrders
+        })
+    }
     createOrder=async(req,res)=>{
         
         
