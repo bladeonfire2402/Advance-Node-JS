@@ -37,6 +37,17 @@ class wishListServices{
     }
 
     removeFromList=async(userId,productId)=>{
+        try {
+            const newCart=await wishListModel.findOneAndUpdate({user:userId},{
+                $pull:{
+                    wishes:productId
+                }
+            },{new:true})
+            return newCart
+            
+        } catch (error) {
+            throw new Error(e)   
+        }
 
     }
 
