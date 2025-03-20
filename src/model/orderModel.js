@@ -17,7 +17,7 @@ const OrderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ['Trực tiếp',"VNPay"],
+      enum: ['Trực tiếp',"VNPay","Momo"],
       required: true,
     },
     paymentStatus: {
