@@ -13,7 +13,7 @@ class ImageService {
       const uploadStream = cloudinary.v2.uploader.upload_stream(
         {
           resource_type: 'image',
-          folder: "hasaki",
+          folder: "lunaxi",
           public_id: productId, // Tên hình theo mã Id product
         },
         (error, result) => {

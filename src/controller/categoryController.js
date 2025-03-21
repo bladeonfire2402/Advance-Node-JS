@@ -31,8 +31,6 @@ class categoryController {
 
     UpdateCategory = async(req,res)=>{
         const {name,slug,description,id}=req.body
-
-
  
         let isExist= await categoriesServices.getCategoryByName(name)
         if(isExist){return res.status(500).json({message:"Dữ liệu lỗi đã có tên danh mục này"})}
@@ -53,8 +51,6 @@ class categoryController {
         })
         
     }
-
-    
 }
 
 export default new categoryController

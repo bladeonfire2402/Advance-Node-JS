@@ -52,7 +52,7 @@ class authController {
         if(checkVerify==false){return res.status(500).json({message:"Tài khoản chưa xác thực"})}
 
         const checkBlock=User.block
-        if(checkBlock==false){return res.status(500).json({message:"Bạn đã bị block khỏi trang"})}
+        if(checkBlock==true){return res.status(500).json({message:"Bạn đã bị block khỏi trang"})}
 
         const accessToken=await createAccessToken(User._id)
 
