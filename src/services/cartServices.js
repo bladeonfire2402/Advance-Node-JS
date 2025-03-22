@@ -1,6 +1,7 @@
 import { trusted } from "mongoose"
 import cartItemModel from "../model/cartItemModel.js"
 import cartModel from "../model/cartModel.js"
+import { populate } from "dotenv"
 
 class cartServices{
     createCart=async(userId)=>{
@@ -16,11 +17,17 @@ class cartServices{
 
     getUserCart= async(id)=>{
         try {
-            const userCart = await cartModel.findOne({user:id})
+            const userCart = await cartModel.findOne({user:id}).populate({
+                path: "cart",
+                populate:{
+                    path:"product"
+                }
+            })           
   
             return userCart
             
         } catch (error) {
+            console.log(error)
             return error.message
         }
     }
@@ -37,7 +44,7 @@ class cartServices{
             return cart
         }
         catch(e){
-            
+            console.log(e)
             return e
         }
     }
@@ -50,6 +57,15 @@ class cartServices{
         } catch (error) {
             console.log(error)
             return false
+        }
+    }
+
+    getCartItemById=async(id)=>{
+        try {
+            const cartItem = await cartItemModel.findOne({_id:id}).populate({path:'product'})
+            return cartItem
+        } catch (error) {
+            
         }
     }
 

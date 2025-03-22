@@ -175,8 +175,9 @@ class orderController {
     }
 
     checkOutMomo = async (req, res) => {
-        // Lấy giỏ hàng của người dùng
+        // Lấy giỏ hàng của người dùng 
         const userCart = await cartServices.getUserCartWithProduct(req.body._id);
+    
         if (!userCart) {
             return res.status(500).json({ message: 'Không tìm thấy giỏ hàng' });
         }
@@ -238,7 +239,7 @@ class orderController {
     
         // Dữ liệu yêu cầu gửi đi
         const paymentUrl = await sendPaymentRequestToMoMo(paymentData); 
-        res.json({ payUrl: paymentUrl });
+        return res.json({ payUrl: paymentUrl });
     };
 
     verifyMomoPayment=async(req,res)=>{

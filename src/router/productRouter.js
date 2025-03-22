@@ -8,7 +8,6 @@ const productRouter= Router()
 productRouter.get("/getProduct",productController.GetProducts)
 productRouter.get("/getById",productController.GetProductById)
 productRouter.post("/createProduct",Remoteupload.single("image"),productController.CreateProduct) //Admin
-productRouter.post("/createProWithImage",Remoteupload.single("image"),productController.uploadImage)
 productRouter.put("/updateProduct",productController.UpdateProduct)
 productRouter.delete("/deleteProduct",productController.DeleteProduct)
 

@@ -68,7 +68,7 @@ const MomoConfig=()=>{
     partnerCode:process.env.MOMO_PARTNERCODE,
     accessKey:process.env.MOMO_ACCESSKEY,
     secretkey:process.env.MOMO_SECRETKEY,
-    redirectUrl:`${appUrl}/api/order/paymentReturn`,
+    redirectUrl:`http://localhost:5173/order/payment_return/`,
     ipnUrl:`${appUrl}/checkout/order/momo/payment/notify`
    }
   )
@@ -81,7 +81,7 @@ const momoParamsGenenrate=(orderData,signature,momoConfig)=>{
     requestId:orderData._id,
     amount:orderData.totalAmount,
     orderId:orderData._id,
-    orderInfo:`bruh`,
+    orderInfo:`Thanh toán cho đơn hàng ${orderData._id}`,
     redirectUrl:momoConfig.redirectUrl,
     ipnUrl:momoConfig.ipnUrl,
     extraData:'none',
@@ -95,7 +95,7 @@ const genrateSignature=(momoConfig,orderData)=>{
   const info = `bruh`
   const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${orderData.totalAmount}&extraData=${'none'}&ipnUrl=${momoConfig.ipnUrl}&orderId=${orderData._id}&orderInfo=${info}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.redirectUrl}&requestId=${orderData._id}&requestType=${'captureWallet'}`;
 
-  console.log(rawSignature)
+ 
   const signature = crypto.createHmac('sha256', momoConfig.secretkey) 
   .update(rawSignature)
   .digest('hex');

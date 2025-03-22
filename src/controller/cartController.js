@@ -1,6 +1,40 @@
 import cartServices from "../services/cartServices.js"
 
 class cartController {
+    getUserCart = async(req,res)=>{
+       const {userId}=req.body//id của người dùng
+
+       const userCart=await cartServices.getUserCart(userId)
+       if(!userCart){return res.status(500).json({message:"Lỗi fetching cart của người dùng",error:userCart})}
+
+       return res.status(200).json({message:'Lấy cart thành công',
+        userCart
+       })
+    }
+
+    getCartItem =async(req,res)=>{
+        const {cartItemId}=req.query
+        
+        const cartItem = await cartServices.getCartItemById(cartItemId);
+        if(!cartItem){return res.status(500).json({message:"Lỗi lấy dữ liệu cartITem"})}
+
+        return res.status(200).json({
+            message:"Lấy dữ liệu cartItem thành công",
+            cartItem
+        })
+    }
+
+    getCartParam=async(req,res)=>{
+        const { userId } = req.query;  
+
+        const userCart=await cartServices.getUserCart(userId)
+        if(!userCart){return res.status(500).json({message:"Lỗi fetching cart của người dùng",error:userCart})}
+ 
+        return res.status(200).json({message:'Lấy cart thành công',
+         userCart
+        })
+    }
+
     AddToCart=async(req,res)=>{
         //Lấy id sản phẩm
         const cartItem = await cartServices.getCartItemByProductId(req.body._id);

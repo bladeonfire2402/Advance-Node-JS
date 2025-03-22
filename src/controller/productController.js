@@ -63,12 +63,13 @@ class productController{
 
     //Update sản phẩm nhưng chưa sửa ảnh và trường category
     UpdateProduct = async(req,res) => {
-        const { id,productName, price, description }= req.body
+        const { id,productName, price, description,status }= req.body
 
         const updateData = {};
         if (productName !== undefined) updateData.productName = productName;
         if (price !== undefined) updateData.price = price;
         if (description !== undefined) updateData.description = description;
+        if(status!==undefined) updateData.status= status
         
         const product = await productServices.updateProduct(id,updateData)
 
