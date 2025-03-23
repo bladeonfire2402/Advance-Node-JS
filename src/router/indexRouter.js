@@ -8,6 +8,8 @@ import cartRouter from './cartRouter.js'
 import orderRouter from './orderRouter.js'
 import wishListRouter from './wishListRouter.js'
 import productViewRouter from './productViewRouter.js'
+import walletRouter from './walletRouter.js'
+import newsRouter from './newsRouter.js'
 
 const IndexRouter= Router()
 
@@ -34,6 +36,12 @@ IndexRouter.use('/wishList',wishListRouter)
 
 //productView
 IndexRouter.use('/productView',productViewRouter)
+
+//Wallet
+IndexRouter.use('/wallet',walletRouter)
+
+//News
+IndexRouter.use('/news',newsRouter)
 
 //
 IndexRouter.use('/test',testRouter)

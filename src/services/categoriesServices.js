@@ -65,7 +65,7 @@ class categoryServices{
                     product:productId
                 }
             })
-            console.log("Thêm sản phẩm vào category thành công");
+          
             return categoryProduct
         } 
         catch (error) {

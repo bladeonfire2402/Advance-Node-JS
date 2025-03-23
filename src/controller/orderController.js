@@ -273,7 +273,6 @@ class orderController {
     cancelOrder=async(req,res)=>{
         const {orderId}=req.body
 
-        console.log(orderId)
         const newData = {
             orderStatus:"Cancelled"
         }

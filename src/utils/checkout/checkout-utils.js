@@ -74,6 +74,18 @@ const MomoConfig=()=>{
   )
 }
 
+const momoConfigVer2=()=>{
+  const appUrl=process.env.APP_URL
+  const walletRedirect = process.env.FE_CHARGE_RETURN_URL
+  return({
+    partnerCode:process.env.MOMO_PARTNERCODE,
+    accessKey:process.env.MOMO_ACCESSKEY,
+    secretkey:process.env.MOMO_SECRETKEY,
+    redirectUrl:`${walletRedirect}`,
+    ipnUrl:`${appUrl}/checkout/order/momo/payment/notify`
+  })
+}
+
 const momoParamsGenenrate=(orderData,signature,momoConfig)=>{
   return{
     partnerCode:momoConfig.partnerCode,
@@ -91,23 +103,48 @@ const momoParamsGenenrate=(orderData,signature,momoConfig)=>{
   }
 }
 
-const genrateSignature=(momoConfig,orderData)=>{
+const momoParamsGenenrateForWallet=(charge,signature,momoConfig)=>{
+  return{
+    partnerCode:momoConfig.partnerCode,
+    accessKey:momoConfig.accessKey,
+    requestId:charge._id,
+    amount:charge.point,
+    orderId:charge._id,
+    orderInfo:`bruh`,
+    redirectUrl:momoConfig.redirectUrl,
+    ipnUrl:momoConfig.ipnUrl,
+    extraData:'none',
+    requestType:'captureWallet',
+    signature:signature,
+    lang:'en'
+  }
+}
+
+
+const genrateSignatureForWallet=(momoConfig,paymentData)=>{
   const info = `bruh`
-  const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${orderData.totalAmount}&extraData=none&ipnUrl=${momoConfig.ipnUrl}&orderId=${orderData._id}&orderInfo=${info}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.redirectUrl}&requestId=${orderData._id}&requestType=captureWallet`;
-
-  console.log(rawSignature)
-
+  const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${paymentData.point}&extraData=none&ipnUrl=${momoConfig.ipnUrl}&orderId=${paymentData._id}&orderInfo=${info}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.redirectUrl}&requestId=${paymentData._id}&requestType=captureWallet`;
 
   const secretKey="K951B6PE1waDMi640xX08PD3vg6EkVlz"
 
- 
   const signature = crypto.createHmac('sha256', secretKey) 
   .update(rawSignature)
   .digest('hex');
 
-  console.log("chuỗi signature "+ signature)
+  return signature
+}
+
+const genrateSignature=(momoConfig,orderData)=>{
+  const info = `bruh`
+  const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${orderData.totalAmount}&extraData=none&ipnUrl=${momoConfig.ipnUrl}&orderId=${orderData._id}&orderInfo=${info}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.redirectUrl}&requestId=${orderData._id}&requestType=captureWallet`;
+
+  const secretKey="K951B6PE1waDMi640xX08PD3vg6EkVlz"
+
+  const signature = crypto.createHmac('sha256', secretKey) 
+  .update(rawSignature)
+  .digest('hex');
 
   return signature
 }
 
-export {vnPayParamGenerate,sortParams,signedGenerate,momoParamsGenenrate,genrateSignature,MomoConfig}
+export {vnPayParamGenerate,sortParams,signedGenerate,momoParamsGenenrate,momoParamsGenenrateForWallet,genrateSignature,MomoConfig,momoConfigVer2,genrateSignatureForWallet}
