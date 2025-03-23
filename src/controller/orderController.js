@@ -19,11 +19,12 @@ class orderController {
     //Lấy tất cả đơn hàng người dùng
     getUserOrders=async(req,res)=>{
         //Lấy theo id người dùng
-        const userOrders = await orderServices.getOrdersByUserId(req.body._id)
+        const {userId}=req.query
+        const userOrders = await orderServices.getOrdersByUserId(userId)
         if(!userOrders|| userOrders.length==0){return res.status(500).json({message:"Không có đơn hàng"})}
 
         return res.status(200).json({
-            message:"Lấy dữ liệu đơn hàng thành công",
+            message:"Lấy tất cả dữ liệu đơn hàng thành công",
             userOrders
         })
     }
@@ -228,7 +229,7 @@ class orderController {
         const EmptyCart= await cartServices.emptyCart(req.body._id)
 
           //Xóa cartItem
-          for(const item of userCart.cart){
+        for(const item of userCart.cart){
             await cartServices.deleteCartItem(item.product._id)
         }
     
@@ -236,6 +237,8 @@ class orderController {
         const momoConfig = MomoConfig();
         const signature = genrateSignature(momoConfig, order);
         const paymentData = momoParamsGenenrate(order, signature, momoConfig);
+
+      
     
         // Dữ liệu yêu cầu gửi đi
         const paymentUrl = await sendPaymentRequestToMoMo(paymentData); 
@@ -243,26 +246,42 @@ class orderController {
     };
 
     verifyMomoPayment=async(req,res)=>{
-        const { query } = req;
+        const {paymentstate,orderid}=req.body
 
         //Nếu thanh toán thành công cập nhật 
         let paymentState='Pending';
-        if(query.message=='Successful.'){
+        if(paymentstate=='Successful.'){
             paymentState= "Paid"
         }else{
-            return res.status(500).json({message:"Thanh toán thất bại",query})
+            return res.status(500).json({message:"Thanh toán thất bại",paymentstate})
         }
         
-        const orderId = query.orderId
+        const orderId = orderid
 
         const updatedStatus = {
             paymentStatus:paymentState,
+            orderStatus:"Approved",
         }
         
         const order=  await orderServices.updateOrder(orderId,updatedStatus)
 
         return res.status(200).json({
             message:"Thanh toán đơn hàng thành công",
+        })
+    }
+
+    cancelOrder=async(req,res)=>{
+        const {orderId}=req.body
+
+        console.log(orderId)
+        const newData = {
+            orderStatus:"Cancelled"
+        }
+        const order = await orderServices.updateOrder(orderId,newData)
+        if(!order){return res.status(500).json({message:"Lỗi fetching order này"})}
+
+        return res.status(200).json({
+            message:"Đã hủy đơn hàng"
         })
     }
 

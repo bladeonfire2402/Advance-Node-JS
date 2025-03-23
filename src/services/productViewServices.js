@@ -1,10 +1,19 @@
 
-import producViewModel from "../model/producViewModel"
+import producViewModel from "../model/producViewModel.js"
 
 class ProductViewServices{
     getAll= async()=>{
         try {
-            const productViews = await producViewModel.find()
+            const productViews = await producViewModel.find().populate({path:"product"})
+            return productViews
+        } catch (error) {
+            throw new Error("Lỗi fetching dữ liệu");   
+        }
+    }
+
+    getTopView =async()=>{
+        try {
+            const productViews = await producViewModel.find().populate({path:"product"}).sort({views:-1})
             return productViews
         } catch (error) {
             throw new Error("Lỗi fetching dữ liệu");   
@@ -12,13 +21,11 @@ class ProductViewServices{
     }
 
     getAllByProductId= async(productId)=>{
-        getAll= async()=>{
-            try {
-                const productViews = await producViewModel.findOne({product:productId})
-                return productViews
-            } catch (error) {
-                throw new Error("Lỗi fetching dữ liệu");   
-            }
+        try {
+            const productViews = await producViewModel.find({product:productId})
+            return productViews
+        } catch (error) {
+            throw new Error("Lỗi fetching dữ liệu");   
         }
     }
 

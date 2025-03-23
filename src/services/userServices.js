@@ -90,7 +90,7 @@ class userServices {
         try{
             const user = await userModel.findOneAndUpdate(email,{
                 username:newInfo.username,
-                pwd:newInfo.pwd
+                phone:newInfo.phone
             },{new:true,runValidators:true})
 
             return user
@@ -100,6 +100,42 @@ class userServices {
             return false
         }
     }
+
+    updateUserBruh = async (email, newInfo) => {
+        try {
+            // Tạo đối tượng cập nhật, chỉ thay đổi các trường không rỗng
+            const updateData = {};
+    
+            // Kiểm tra nếu username không phải chuỗi rỗng thì mới cập nhật
+            if (newInfo.fullname !== "") {
+                updateData.fullname = newInfo.fullname;
+            }
+    
+            // Kiểm tra nếu phone không phải chuỗi rỗng thì mới cập nhật
+            if (newInfo.phone !== "") {
+                updateData.phone = newInfo.phone;
+            }
+    
+            // Nếu không có gì thay đổi, trả về false
+            if (Object.keys(updateData).length === 0) {
+                return false;
+            }
+    
+            // Cập nhật chỉ với các trường đã thay đổi
+            const user = await userModel.findOneAndUpdate(
+                { email: email },
+                updateData,
+                { new: true, runValidators: true }
+            );
+    
+            return user;
+        }
+        catch (e) {
+            console.log(e);
+            return false;
+        }
+    };
+    
 
     //Chuyển từ token về user
     decodedUser = async(token)=>{

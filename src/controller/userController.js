@@ -40,18 +40,24 @@ class userController {
 
     updateUserInfo = async(req,res)=>{
         // Mã hóa pwd mới
-        const hashedPwd = await encodePwd(req.body.pwd)
-
+       
         let newInfo={
-            username:req.body.username,
-            pwd:hashedPwd
+            fullname:req.body.fullname,
+            phone:req.body.phone
         }
-        const user= userServices.getUserByEmail(req.body.email,newInfo)
+        const user= await userServices.updateUserBruh(req.body.email,newInfo)
 
         return res.status(200).json({
             message:"Đã update người dùng",
             user
         })
+    }
+
+    updateUserPwd=async(req,res)=>{
+        
+
+        const hashedPwd = await encodePwd(req.body.pwd)
+        if(!hashedPwd){return res.status(500).json({message:"Lỗi hashPWd mới"})}
     }
 }
 

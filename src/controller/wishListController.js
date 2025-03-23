@@ -1,9 +1,10 @@
-import wishListService from "../services/wishListService"
-import userServices from "./userServices"
+import userServices from "../services/userServices.js"
+import wishListService from "../services/wishListService.js"
+
 
 class WishListController {
     getWishList = async(req,res)=>{
-        const {userId}=req.body
+        const {userId}=req.query
 
         const user = await userServices.getUserById(userId)
         if(!user){return res.status(500).json({message:"Không có người dùng"})}
@@ -52,7 +53,7 @@ class WishListController {
         let wishList = await wishListService.getWishList(userId)
         //Nếu chưa thì tạo wishList
         if(!wishList){wishList=await wishListService.createWishList(userId)}
-
+        
         //Kiểm tra xem có sản phẩm này trong wishList chưa 
         const checkWish= wishListService.checkWishExist(productId,wishList.wishes)
         if(checkWish==false){return res.status(500).json({message:"Chưa có sản phẩm này trong wishList"})}
@@ -61,7 +62,7 @@ class WishListController {
         const removeFromWish= await wishListService.removeFromList(userId,productId)
 
         return res.status(200).json({
-            message:"Thêm sản phẩm vào danh sách yêu thích",
+            message:"Xóa khỏi danh sách yêu thích",
             removeFromWish
         })
     }

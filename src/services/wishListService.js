@@ -1,4 +1,4 @@
-import wishListModel from "../model/wishListModel"
+import wishListModel from "../model/wishListModel.js"
 
 
 class wishListServices{
@@ -14,7 +14,7 @@ class wishListServices{
     
     getWishList = async(userId)=>{
         try {
-            const wishList = await wishListModel.findOne({user:userId})
+            const wishList = await wishListModel.findOne({user:userId}).populate('wishes')
 
             return wishList
         } catch (error) {
@@ -52,12 +52,9 @@ class wishListServices{
     }
 
     checkWishExist=(productId, wishes)=>{
-        for(var i=0;i<wishes;i++){
-            if(productId==wishes[i]){
-                return true
-            }
-        }
-        return false
+        const exists = wishes.some(wish => wish._id.toString() === productId.toString());
+
+        return exists;
     }
 }
 

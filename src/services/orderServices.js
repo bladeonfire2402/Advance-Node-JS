@@ -16,7 +16,7 @@ class orderServices{
     //
     getOrdersByUserId=async(userId)=>{
         try{
-            const orders=await orderModel.find(userId).populate({path:'user'})
+            const orders=await orderModel.find({user:userId}).populate({path:'user'})
             return orders
         }
         catch(e){
@@ -57,6 +57,10 @@ class orderServices{
             throw new Error(error)
         }
     }
+
+    
+
+    
 }
 
 export default new orderServices

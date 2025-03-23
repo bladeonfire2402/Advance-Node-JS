@@ -7,6 +7,7 @@ import userRouter from './userRouter.js'
 import cartRouter from './cartRouter.js'
 import orderRouter from './orderRouter.js'
 import wishListRouter from './wishListRouter.js'
+import productViewRouter from './productViewRouter.js'
 
 const IndexRouter= Router()
 
@@ -30,6 +31,9 @@ IndexRouter.use('/order',orderRouter)
 
 //wishList
 IndexRouter.use('/wishList',wishListRouter)
+
+//productView
+IndexRouter.use('/productView',productViewRouter)
 
 //
 IndexRouter.use('/test',testRouter)

@@ -81,7 +81,7 @@ const momoParamsGenenrate=(orderData,signature,momoConfig)=>{
     requestId:orderData._id,
     amount:orderData.totalAmount,
     orderId:orderData._id,
-    orderInfo:`Thanh toán cho đơn hàng ${orderData._id}`,
+    orderInfo:`bruh`,
     redirectUrl:momoConfig.redirectUrl,
     ipnUrl:momoConfig.ipnUrl,
     extraData:'none',
@@ -93,12 +93,19 @@ const momoParamsGenenrate=(orderData,signature,momoConfig)=>{
 
 const genrateSignature=(momoConfig,orderData)=>{
   const info = `bruh`
-  const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${orderData.totalAmount}&extraData=${'none'}&ipnUrl=${momoConfig.ipnUrl}&orderId=${orderData._id}&orderInfo=${info}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.redirectUrl}&requestId=${orderData._id}&requestType=${'captureWallet'}`;
+  const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${orderData.totalAmount}&extraData=none&ipnUrl=${momoConfig.ipnUrl}&orderId=${orderData._id}&orderInfo=${info}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.redirectUrl}&requestId=${orderData._id}&requestType=captureWallet`;
+
+  console.log(rawSignature)
+
+
+  const secretKey="K951B6PE1waDMi640xX08PD3vg6EkVlz"
 
  
-  const signature = crypto.createHmac('sha256', momoConfig.secretkey) 
+  const signature = crypto.createHmac('sha256', secretKey) 
   .update(rawSignature)
   .digest('hex');
+
+  console.log("chuỗi signature "+ signature)
 
   return signature
 }

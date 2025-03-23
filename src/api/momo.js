@@ -31,7 +31,10 @@ export const sendPaymentRequestToMoMo = (paymentData) => {
                 try {
                     // Chuyển đổi phản hồi thành đối tượng JSON
                     const parsedBody = JSON.parse(responseBody);
-
+            
+                    // Log phản hồi từ MoMo để kiểm tra
+                    console.log("MoMo Response:", parsedBody);
+            
                     // Kiểm tra nếu có trường payUrl trong phản hồi
                     if (parsedBody.payUrl) {
                         // Trả về URL thanh toán để người dùng có thể tiếp tục thanh toán
@@ -45,6 +48,7 @@ export const sendPaymentRequestToMoMo = (paymentData) => {
                     reject(new Error('Error parsing response from MoMo'));
                 }
             });
+            
         });
 
         // Xử lý lỗi nếu có trong quá trình gửi yêu cầu
