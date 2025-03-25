@@ -15,6 +15,17 @@ class walletServices{
         }
     }
 
+    getChagre=async(chargeId)=>{
+        try {
+            const charge= await chargeModel.findById(chargeId)
+
+            return charge
+            
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
     createWallet=async(userId)=>{
         try {
             const wallet = await walletModel.create({
@@ -24,7 +35,7 @@ class walletServices{
             return wallet
             
         } catch (error) {
-            throw new Error(error)
+            throw new Error(error);
         }
     }
 
@@ -43,14 +54,46 @@ class walletServices{
         }
     }
 
-    addPoint=async(walletId,point)=>{
+    addPoint = async (wallet, point) => {
         try {
-            const walletadd = walletModel.findById({})
+            const prePoint = Number(wallet.points); // Ép kiểu đảm bảo
+            const addPoint = Number(point); // Ép kiểu đảm bảo
+    
+            if (isNaN(addPoint)) {
+                throw new Error(`Point value is not a number: ${point}`);
+            }
+    
+            wallet.points = prePoint + addPoint;
+    
+            await wallet.save();
+    
+            return wallet;
+    
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    chargeWallet = async(wallet,chargePoint)=>{
+        try {
+            const prePoint = Number(wallet.points); // Ép kiểu đảm bảo
+            const charge = Number(chargePoint); 
+
+            if (isNaN(charge)) {
+                throw new Error(`Point value is not a number: ${point}`);
+            }
+
+            wallet.points=prePoint-charge
+            
+            await wallet.save()
+
+            return wallet
             
         } catch (error) {
             throw new Error(error)
         }
     }
+    
 
     updateChargeSuccess=async(chargeId)=>{
         try {
@@ -61,7 +104,8 @@ class walletServices{
             return charge
             
         } catch (error) {
-            throw new Error(e)
+            console.log(error)
+            throw new Error(error)
         }
     }
 

@@ -7,7 +7,7 @@ import { comparePwd, createAccessToken, createUniqueString, encodePwd } from "..
 
 class authController {
     signUp=async(req,res)=>{
-        const {username,email,pwd}=req.body;
+        const {fullname,email,pwd}=req.body;
 
         //Đã có ng dùng này theo email
         const checkEmailExist = await userServices.getUserByEmail(email);

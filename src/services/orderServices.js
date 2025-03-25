@@ -1,4 +1,5 @@
 import orderModel from "../model/orderModel.js"
+import orderRefundModel from "../model/orderRefundModel.js"
 
 class orderServices{
     //Lấy id order
@@ -10,6 +11,54 @@ class orderServices{
         catch(e){
             console.log(e)
             throw new Error(e)
+        }
+    }
+
+    getRefundByOrderId=async(orderId)=>{
+        try {
+            const refund = await orderRefundModel.findOne({
+                orderId:orderId
+            })
+
+            return refund
+
+        } catch (error) {
+            throw new Error(error)            
+        }
+    }
+
+    getAllRefund=async()=>{
+        try {
+            const refunds = await orderRefundModel.find()
+
+            return refunds
+
+        } catch (error) {
+            throw new Error(error)            
+        }
+    }
+
+    getUserRefundByUserID = async(userId)=>{
+        try {
+            const userRefunds= await orderRefundModel.find({
+                user:userId
+            })
+
+            return userRefunds
+            
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    createRefund=async(refundData)=>{
+        try {
+            const refund = await orderRefundModel.create(refundData)
+
+            return refund
+            
+        } catch (error) {
+            throw new Error(error)
         }
     }
 
@@ -58,7 +107,20 @@ class orderServices{
         }
     }
 
-    
+    updateRefund =async(refundId,status,feedBack)=>{
+        try {
+            const updateRefund= await orderRefundModel.findByIdAndUpdate(refundId,{
+                status:status,
+                feedBack:feedBack,
+            })
+
+            return updateRefund
+            
+        } catch (error) {
+            throw new Error(error)
+            
+        }
+    }
 
     
 }

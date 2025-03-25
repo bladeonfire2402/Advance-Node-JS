@@ -46,30 +46,35 @@ class walletController {
     }
 
     verifyPaymentWallet=async(req,res)=>{
-        const {paymentstate,paymentId}=req.body
+        const {message,paymentId,amount}=req.body
         
+ 
         //Nếu thanh toán thành công cập nhật 
         let paymentStatus='Pending';
-        if(paymentstate=='Successful.'){
+        if(message=='Successful.'){
             paymentStatus= "Successful"
         }else{
-            return res.status(500).json({message:"Thanh toán thất bại",paymentstate})
+            return res.status(500).json({message:"Thanh toán thất bại",paymentStatus})
         }
+        
+        const isChargeSucceed = await walletServices.getChagre(paymentId)
+        if(!isChargeSucceed){return res.status(500).json({message:"Không tìm thấy yêu cầu nạp tiền này"})}
+
+        if(isChargeSucceed.paymentStatus=="Successful")
+        {return res.status(200).json({message:"Đã nạp tiền thành công rồi"})}
 
         const successCharge = await walletServices.updateChargeSuccess(paymentId)
-        if(!successCharge){return res.status(500).json({message:"lỗi update "})}
-        
-        const orderId = orderid
+        if(!successCharge){return res.status(500).json({message:"lỗi update "})} 
 
-        const updatedStatus = {
-            paymentStatus:paymentState,
-            orderStatus:"Approved",
-        }
-        
-        const order=  await orderServices.updateOrder(orderId,updatedStatus)
+        const wallet = await walletServices.getWallet(successCharge.user)
+        if(!wallet){return res.status(500).json({message:"Lỗi lấy dữ liệu ví"})}        
+
+        const addPointtoWallet= await walletServices.addPoint(wallet,amount)
+        if(!addPointtoWallet){return res.status(500).json({message:"Lỗi nạp tiền vào ví"})}
 
         return res.status(200).json({
             message:"Thanh toán đơn hàng thành công",
+            addPointtoWallet
         })
     }
 }

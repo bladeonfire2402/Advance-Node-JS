@@ -11,8 +11,10 @@ orderRouter.get('/getUserOrders',orderController.getUserOrders)
 orderRouter.post('/cancelOrder', orderController.cancelOrder)
 orderRouter.post('/paymentReturn', orderController.verifyMomoPayment);//hàm này để verify payment success không
 ;//hàm này để verify payment success không
+orderRouter.post('/refund',orderController.requestRefund)
 orderRouter.post('/checkOutCod',orderController.checkOutCod)
 orderRouter.post('/vnPay',orderController.checkOutvnPay)
+orderRouter.post('/checkOutWallet',orderController.checkOutWithWallet)
 //Momo
 orderRouter.post('/checkOutMomo',orderController.checkOutMomo)
 orderRouter.post('/verifyMomoPayment',orderController.verifyMomoPayment)
