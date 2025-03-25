@@ -65,7 +65,6 @@ class categoryServices{
                     product:productId
                 }
             })
-          
             return categoryProduct
         } 
         catch (error) {
