@@ -5,6 +5,7 @@ import { vnPayParamGenerate,sortParams, signedGenerate, momoParamsGenenrate, Mom
 import { sendPaymentRequestToMoMo } from "../api/momo.js"
 import walletServices from "../services/walletServices.js"
 
+
 class orderController {
     //Lấy tât cả đơn hàng
     getOrders=async(req,res)=>{
@@ -49,16 +50,36 @@ class orderController {
 
     }
 
+    updateOrderStatus = async(req,res)=>{
+        const {orderId, }=req.body
+
+        const order= await orderServices.getOrderById(orderId)
+        if(!order){return res.status(500).json({message:"Không có order này"})}
+
+        const newData={
+            orderStatus
+        }
+        
+        const updatedOrder = await orderServices.updateOrder(orderId,newData)
+
+        return res.status(200).json({mesage:`Cập nhật đơn hàng thành ${updatedOrder}`})
+    }
+
     //
     checkOutCod = async(req,res)=>{
         //id người dùng
         const userCart = await cartServices.getUserCartWithProduct(req.body._id)
         if(!userCart){return res.status(500).json({message:'Không tìm thấy giỏ hàng'})}
 
+        let wallet = await walletServices.getWallet(req.body._id)
+        if(!wallet){wallet= await walletServices.createWallet(req.body._id)}
+
         //truyền vô id người dùng
         const user = await userServices.getUserById(req.body._id)
         if(!user){return res.status(500).json({message:"Không có người dùng này"})}
 
+        const discoutPrice= req.body.dicountPrice
+        
         
         if(userCart.cart.length==0){
             return res.status(500).json({message:"Chưa có sản phẩm trong giỏ"})
@@ -72,7 +93,11 @@ class orderController {
 
         const itemsPrice = orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
         const shippingPrice = 20000; // fixed or dynamic
-        const totalPrice = itemsPrice + shippingPrice;
+        const totalPrice = itemsPrice + shippingPrice-discoutPrice;
+
+        const chargeWallet = await walletServices.chargeWallet(wallet,discoutPrice)
+        if(!chargeWallet){return res.status(500).json({message:"Lỗi thanh toán"})}
+
 
         const OrderData = ({
             user: user._id,
@@ -243,6 +268,9 @@ class orderController {
     checkOutMomo = async (req, res) => {
         // Lấy giỏ hàng của người dùng 
         const userCart = await cartServices.getUserCartWithProduct(req.body._id);
+
+        let wallet = await walletServices.getWallet(req.body._id)
+        if(!wallet){wallet= await walletServices.createWallet(req.body._id)}
     
         if (!userCart) {
             return res.status(500).json({ message: 'Không tìm thấy giỏ hàng' });
@@ -258,6 +286,8 @@ class orderController {
         if (userCart.cart.length == 0) {
             return res.status(500).json({ message: "Chưa có sản phẩm trong giỏ" });
         }
+
+        const discoutPrice= req.body.dicountPrice
     
         // Tạo danh sách các sản phẩm trong đơn hàng
         const orderItems = userCart.cart.map(item => ({
@@ -269,7 +299,10 @@ class orderController {
         // Tính toán tổng giá trị đơn hàng
         const itemsPrice = orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
         const shippingPrice = 20000; // Giá vận chuyển, có thể thay đổi theo cách tính động
-        const totalPrice = itemsPrice + shippingPrice;
+        const totalPrice = itemsPrice + shippingPrice-discoutPrice;
+
+        const chargeWallet = await walletServices.chargeWallet(wallet,discoutPrice)
+        if(!chargeWallet){return res.status(500).json({message:"Lỗi trừ tiền trong ví"})}
     
         // Dữ liệu đơn hàng
         const OrderData = ({
@@ -302,9 +335,7 @@ class orderController {
         const momoConfig = MomoConfig();
         const signature = genrateSignature(momoConfig, order);
         const paymentData = momoParamsGenenrate(order, signature, momoConfig);
-
-      
-    
+        
         // Dữ liệu yêu cầu gửi đi
         const paymentUrl = await sendPaymentRequestToMoMo(paymentData); 
         return res.json({ payUrl: paymentUrl });
@@ -320,15 +351,14 @@ class orderController {
         }else{
             return res.status(500).json({message:"Thanh toán thất bại",paymentstate})
         }
-        
-        const orderId = orderid
 
         const updatedStatus = {
             paymentStatus:paymentState,
             orderStatus:"Approved",
         }
         
-        const order=  await orderServices.updateOrder(orderId,updatedStatus)
+        //Update lại trạng thái đơn hàng
+        const order=  await orderServices.updateOrder(orderid,updatedStatus)
 
         return res.status(200).json({
             message:"Thanh toán đơn hàng thành công",
@@ -380,12 +410,12 @@ class orderController {
     disaproveRefund = async(req,res)=>{
         const {refundId,feedBack}=req.body
 
-        if(feedBack==undefined){feedBack="Rất tiếc sản phẩm bạn sẽ không đổi trả"}
+        if(feedBack==undefined){feedBack="Rất tiếc sản phẩm bạn sẽ không được đổi trả"}
 
         const refund = await orderServices.updateRefund(refundId,"Bác bỏ",feedBack)
         if(!refund){return res.status(500).json({message:"Lỗi update đổi trả"})}
         
-        return res.status(200).json({mesage:"bác bỏ thành công",refund})
+        return res.status(200).json({mesage:"Đã bác bỏ yêu cầu đổi trả",refund})
     }
 
     
@@ -432,7 +462,7 @@ class orderController {
 
         const userRefund= await orderServices.getUserRefundByUserID(userId)
         if(!userRefund ){return res.status(500).json({mesage:"Lỗi lấy yêu cầu đổi hàng "})}
-        if(userRefund.length ){return res.status(200).json({mesage:"Chưa có yêu cầu đổi hàng"})}
+        if(userRefund.length==0 ){return res.status(200).json({mesage:"Chưa có yêu cầu đổi hàng"})}
 
         return res.status(200).json({mesage:"Lấy yêu cầu đổi hàng người dùng thành công",userRefund})
     }
@@ -444,7 +474,7 @@ class orderController {
         const order = await orderServices.getOrderById(orderId)
         if(!order){return res.status(500).json({message:"Lỗi không tìm thấy đơn hàng"})}
 
-        if(orderStatus=="Cancelled" || orderStatus=="Delivered"){
+        if(order.orderStatus=="Cancelled" || order.orderStatus=="Delivered"){
             return res.status(500).json({message:`Đơn hàng đã ${orderStatus} không thể thay đổi được`})
         }
 
@@ -454,7 +484,9 @@ class orderController {
 
         const updatedOrder  = await orderServices.updateOrder(orderId,newData)
 
-        return res.status(200).json({message:"Đã update trạng thái đơn hàng",updatedOrder})
+        const afterUpdate= await orderServices.getOrderById(orderId)
+
+        return res.status(200).json({message:"Đã update trạng thái đơn hàng",afterUpdate})
     }
 }
 export default new orderController

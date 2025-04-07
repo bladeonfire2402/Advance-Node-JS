@@ -1,6 +1,5 @@
 import {Router} from 'express'
 import categoryController from '../controller/categoryController.js'
-import checkPermissionAd from '../middleware/checkPermissionAdmin.js'
 
 const categoryRouter = Router()
 

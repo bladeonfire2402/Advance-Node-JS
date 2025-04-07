@@ -1,6 +1,7 @@
 import authServices from "../services/authServices.js";
 import cartServices from "../services/cartServices.js";
 import userServices from "../services/userServices.js";
+import walletServices from "../services/walletServices.js";
 import { comparePwd, createAccessToken, createUniqueString, encodePwd } from "../utils/authentication/auth-utils.js";
 
 
@@ -20,6 +21,10 @@ class authController {
             ...req.body,
             pwd:hashedPwd
         });
+
+        //Tạo ví người dùng
+        const wallet = await walletServices.createWallet(newUser._id)
+        if(!wallet){return res.status(500).json({message:'lỗi tạo ví'})}
 
         //Tạo cart cho người dùng
         const cart = await cartServices.createCart(newUser._id)
